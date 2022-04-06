@@ -298,7 +298,9 @@ install(
 set_property(GLOBAL APPEND PROPERTY SCS_TARGETS ${${PROJECT_NAME}_INDIRECT})
 
 # ##############################################################################
-
+if (MKLROOT)
+  set(ENV{MKLROOT} MKLROOT)
+endif()
 # If MKLROOT is defined, then we install the MKL version.
 if(DEFINED ENV{MKLROOT})
 
@@ -391,6 +393,7 @@ if(BUILD_TESTING)
   add_executable(run_tests_direct test/run_tests.c)
   target_compile_definitions(run_tests_direct PRIVATE ${COMPILER_OPTS})
   target_link_libraries(run_tests_direct PRIVATE scs::scsdir)
+  target_link_libraries(run_tests_direct PUBLIC m)
   target_include_directories(
     run_tests_direct
     PRIVATE
@@ -405,6 +408,7 @@ if(BUILD_TESTING)
   add_executable(run_tests_indirect test/run_tests.c)
   target_compile_definitions(run_tests_indirect PRIVATE ${COMPILER_OPTS})
   target_link_libraries(run_tests_indirect PRIVATE scs::scsindir)
+  target_link_libraries(run_tests_indirect PUBLIC m)
   target_include_directories(
     run_tests_indirect
     PRIVATE
@@ -420,6 +424,7 @@ if(BUILD_TESTING)
     add_executable(run_tests_mkl test/run_tests.c)
     target_compile_definitions(run_tests_mkl PRIVATE ${COMPILER_OPTS})
     target_link_libraries(run_tests_mkl PRIVATE scs::scsmkl)
+    target_link_libraries(run_tests_mkl PUBLIC m)
     target_include_directories(
       run_tests_mkl
       PRIVATE
